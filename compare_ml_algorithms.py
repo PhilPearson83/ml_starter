@@ -1,4 +1,4 @@
-# Compare Algorithms
+import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,9 +26,6 @@ import warnings
 warnings.filterwarnings('ignore')
 #warnings.simplefilter(action='ignore', category=FutureWarning)
 #warnings.simplefilter(action='ignore', category=UserWarning)
-
-# Performance
-import time
 
 # load dataset into pandas dataframe
 inputfile = 'W:/2_Reference_Materials/Python/BusSafetyCompliance/Comp.csv'
@@ -142,19 +139,16 @@ for name, clf in models:
     ax.contourf(xx, yy, Z, cmap=cm, alpha=.8)
 
     # Plot the training points
-    #ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright,
-    #            edgecolors='k')
+    ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
     # Plot the testing points
-    #ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright,
-    #            edgecolors='k', alpha=0.6)
+    ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, edgecolors='k', alpha=0.6)
 
     ax.set_xlim(xx.min(), xx.max())
     ax.set_ylim(yy.min(), yy.max())
     ax.set_xticks(())
     ax.set_yticks(())
     ax.set_title(name)
-    ax.text(xx.max() - .3, yy.min() + .3, ('%.2f' % score).lstrip('0'),
-            size=15, horizontalalignment='right')
+    ax.text(xx.max() - .3, yy.min() + .3, ('%.2f' % score).lstrip('0'), size=15, horizontalalignment='right')
     i += 1
 plt.tight_layout()
 plt.show()
