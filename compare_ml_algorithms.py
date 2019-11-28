@@ -31,7 +31,7 @@ warnings.filterwarnings('ignore')
 inputfile = 'W:/2_Reference_Materials/Python/BusSafetyCompliance/Comp.csv'
 y_field = 'Job_Outcome'
 df = pd.read_csv(inputfile)
-df = df.iloc[:, 0:8]
+df = df.iloc[:, 0:3]
 
 # create x and y values
 x = np.array(df.drop(y_field, axis=1))
@@ -142,7 +142,7 @@ for name, clf in models:
     # Plot the training points
     #ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
     # Plot the testing points
-    ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
+    #ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
 
     ax.set_xlim(xx.min(), xx.max())
     ax.set_ylim(yy.min(), yy.max())
