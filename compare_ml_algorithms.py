@@ -51,17 +51,17 @@ models.append(('LR', LogisticRegression()))
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('KNN', KNeighborsClassifier()))
 #models.append(('RNC', RadiusNeighborsClassifier(radius = 200)))
-models.append(('DecTree', DecisionTreeClassifier())) # max_depth=5
+models.append(('CART', DecisionTreeClassifier())) # max_depth=5
+models.append(('RanFor', RandomForestClassifier())) # max_depth=5, n_estimators=10, max_features=1
+models.append(('ExTree', ExtraTreesClassifier()))
 models.append(('NB', GaussianNB()))
 #models.append(('CB', ComplementNB())) # Can't have negative X values
 models.append(('SVM', SVC()))
-models.append(('RanFor', RandomForestClassifier())) # max_depth=5, n_estimators=10, max_features=1
-models.append(('ExTree', ExtraTreesClassifier()))
 models.append(('Ada', AdaBoostClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 models.append(('QDA', QuadraticDiscriminantAnalysis()))
 #models.append(('Gaussian Process', GaussianProcessClassifier(1.0 * RBF(1.0))))
-#models.append(('Neural Net', MLPClassifier(alpha=1, max_iter=1000)))
+models.append(('MLP', MLPClassifier(alpha=1, max_iter=1000)))
 
 # evaluate each model in the list
 results = []
@@ -88,13 +88,13 @@ ax.set_xticklabels(names)
 plt.ylim((None,1))
 plt.show()   
 
-# split dataframe into train and test
+# split data into train and test
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=seed)
 
-# scale x arrays
-scaler = StandardScaler()
-x_train_scaled = scaler.fit_transform(x_train) 
-x_test_scaled = scaler.transform(x_test) 
+# standardisation of x arrays
+std_scale = StandardScaler()
+x_train_scaled = std_scale.fit_transform(x_train) 
+x_test_scaled = std_scale.transform(x_test) 
 
 #x_min, x_max = x_train_scaled[:, 0].min() - .5, x_train_scaled[:, 0].max() + .5
 #y_min, y_max = x_train_scaled[:, 1].min() - .5, x_train_scaled[:, 1].max() + .5
