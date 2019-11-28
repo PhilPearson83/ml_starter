@@ -31,7 +31,7 @@ warnings.filterwarnings('ignore')
 inputfile = 'W:/2_Reference_Materials/Python/BusSafetyCompliance/Comp.csv'
 y_field = 'Job_Outcome'
 df = pd.read_csv(inputfile)
-df = df.iloc[:, 0:3]
+df = df.iloc[:, 0:8]
 
 # create x and y values
 x = np.array(df.drop(y_field, axis=1))
@@ -51,11 +51,11 @@ models.append(('LR', LogisticRegression()))
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('KNN', KNeighborsClassifier()))
 #models.append(('RNC', RadiusNeighborsClassifier(radius = 200)))
-models.append(('DecTree', DecisionTreeClassifier(max_depth=5)))
+models.append(('DecTree', DecisionTreeClassifier())) # max_depth=5
 models.append(('NB', GaussianNB()))
 #models.append(('CB', ComplementNB())) # Can't have negative X values
 models.append(('SVM', SVC()))
-models.append(('RanFor', RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)))
+models.append(('RanFor', RandomForestClassifier())) # max_depth=5, n_estimators=10, max_features=1
 models.append(('ExTree', ExtraTreesClassifier()))
 models.append(('Ada', AdaBoostClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
@@ -96,6 +96,8 @@ scaler = StandardScaler()
 x_train_scaled = scaler.fit_transform(x_train) 
 x_test_scaled = scaler.transform(x_test) 
 
+#x_min, x_max = x_train_scaled[:, 0].min() - .5, x_train_scaled[:, 0].max() + .5
+#y_min, y_max = x_train_scaled[:, 1].min() - .5, x_train_scaled[:, 1].max() + .5
 x_min, x_max = x_train_scaled[:, 0].min() - .5, x_train_scaled[:, 0].max() + .5
 y_min, y_max = x_train_scaled[:, 1].min() - .5, x_train_scaled[:, 1].max() + .5
 xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
@@ -110,10 +112,10 @@ ax = plt.subplot(1, len(models) + 1, i)
 ax.set_title("Input data")
 
 # Plot the training points
-#ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
+ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
 
 # Plot the testing points
-ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
+#ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
 
 ax.set_xlim(xx.min(), xx.max())
 ax.set_ylim(yy.min(), yy.max())
@@ -127,8 +129,7 @@ for name, clf in models:
     clf.fit(x_train_scaled, y_train)
     score = clf.score(x_test_scaled, y_test)
 
-    # Plot the decision boundary. For that, we will assign a color to each
-    # point in the mesh [x_min, x_max]x[y_min, y_max].
+    # Plot the decision boundary. For that, we will assign a color to each point in the mesh [x_min, x_max]x[y_min, y_max].
     if hasattr(clf, "decision_function"):
         Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
     else:
@@ -136,12 +137,12 @@ for name, clf in models:
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
-    ax.contourf(xx, yy, Z, cmap=cm, alpha=.8)
+    ax.contourf(xx, yy, Z, cmap=cm, alpha=.3)
 
     # Plot the training points
-    ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
+    #ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
     # Plot the testing points
-    ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, edgecolors='k', alpha=0.6)
+    ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
 
     ax.set_xlim(xx.min(), xx.max())
     ax.set_ylim(yy.min(), yy.max())
