@@ -1,2 +1,2 @@
 # ml_starter
-Useful scripts to start a ML project using python
+Useful starter script to visualise different ML methods utilising the initial dataset.
