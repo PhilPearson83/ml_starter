@@ -7,19 +7,17 @@ from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn import model_selection
-from sklearn.linear_model import LinearRegression, Ridge, Lasso, BayesianRidge, SGDClassifier, LogisticRegression
+from sklearn.linear_model import LinearRegression, LogisticRegressionCV, Ridge, Lasso, BayesianRidge, SGDClassifier, LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB, ComplementNB
 from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier, BaggingClassifier
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
 from sklearn.neural_network import MLPClassifier
-
-h = .02  # step size in the mesh
 
 # Disable annoying warnings
 import warnings
@@ -27,18 +25,27 @@ warnings.filterwarnings('ignore')
 #warnings.simplefilter(action='ignore', category=FutureWarning)
 #warnings.simplefilter(action='ignore', category=UserWarning)
 
-# load dataset into pandas dataframe
+h = .02  # step size in the mesh
+seed = 123 # set random number for consistancy
+
+# load dataset into dataframe
 inputfile = 'W:/2_Reference_Materials/Python/BusSafetyCompliance/Comp.csv'
-y_field = 'Job_Outcome'
+y_value = 'Job_Outcome'
 df = pd.read_csv(inputfile)
 df = df.iloc[:, 0:3]
 
-# create x and y values
-x = np.array(df.drop(y_field, axis=1))
-y = np.array(df[y_field])
 
-# set seed for consistancy
-seed = 123
+# create x y values and standardisation x array
+x = df.drop(y_value, axis=1)
+feature_names = list(x.columns.values)
+std_scale = StandardScaler()
+X_std = np.array(std_scale.fit_transform(x))
+Y = np.array(df[y_value])
+
+# create x and y values
+x = np.array(df.drop(y_value, axis=1))
+y = np.array(df[y_value])
+
 
 # create list of models
 models = []
@@ -46,17 +53,19 @@ models = []
 #models.append(('LinReg', Ridge()))
 #models.append(('LinReg', Lasso()))
 #models.append(('BR', BayesianRidge()))
-models.append(('SGD', SGDClassifier()))
-models.append(('LR', LogisticRegression()))
+models.append(('SGD', SGDClassifier(max_iter=1000, random_state=seed, class_weight='balanced')))
+models.append(('LR', LogisticRegression(class_weight='balanced')))
+models.append(('LRCV', LogisticRegressionCV(class_weight='balanced')))
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('KNN', KNeighborsClassifier()))
 #models.append(('RNC', RadiusNeighborsClassifier(radius = 200)))
-models.append(('CART', DecisionTreeClassifier())) # max_depth=5
-models.append(('RanFor', RandomForestClassifier())) # max_depth=5, n_estimators=10, max_features=1
-models.append(('ExTree', ExtraTreesClassifier()))
+models.append(('CART', DecisionTreeClassifier(class_weight='balanced'))) # max_depth=5
+models.append(('RanFor', RandomForestClassifier(class_weight='balanced'))) # max_depth=5, n_estimators=10, max_features=1
+models.append(('ExTree', ExtraTreesClassifier(class_weight='balanced')))
+models.append(('BC', BaggingClassifier()))
 models.append(('NB', GaussianNB()))
 #models.append(('CB', ComplementNB())) # Can't have negative X values
-models.append(('SVM', SVC()))
+models.append(('SVM', SVC(class_weight='balanced')))
 models.append(('Ada', AdaBoostClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 models.append(('QDA', QuadraticDiscriminantAnalysis()))
@@ -71,7 +80,7 @@ print("---------------------------------------")
 for name, model in models:
     start_time = time.time()
     kfold = model_selection.KFold(n_splits=15, random_state=seed)
-    cv_results = model_selection.cross_val_score(model, x, y, cv=kfold, scoring=scoring)
+    cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     results.append(cv_results)
     names.append(name)
