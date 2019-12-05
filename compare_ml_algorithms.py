@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+from operator import itemgetter
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -75,27 +76,37 @@ models.append(('MLP', MLPClassifier(alpha=1, max_iter=1000)))
 # evaluate each model in the list
 results = []
 names = []
+combined_results = []
 scoring = 'accuracy'
 print("---------------------------------------")
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=15, random_state=seed)
+    kfold = model_selection.KFold(n_splits=10, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     results.append(cv_results)
     names.append(name)
+    combined_results.append((name, cv_results.mean(), cv_results))
     msg = "%s: %f (%f) Time elapsed: %f" % (name, cv_results.mean(), cv_results.std(), elapsed_time)
     print(msg)
 print("---------------------------------------")
 
+# sort our results by mean avg score and assign results to variables
+combined_results_sorted = sorted(combined_results, key=itemgetter(1))
+labels = [i[0] for i in combined_results_sorted]
+meanscore = [i[1] for i in combined_results_sorted]
+results = [i[2] for i in combined_results_sorted]
+
+
 # boxplot algorithm comparison
+green_diamond = dict(markerfacecolor='b', marker='d')
 fig = plt.figure()
-fig.suptitle('Model Comparison')
 ax = fig.add_subplot(111)
-plt.boxplot(results)
-ax.set_xticklabels(names)
+ax.set_xticklabels(labels)
+ax.boxplot(x=results, flierprops=green_diamond) #notch=True bootstrap=1000
 plt.ylim((None,1))
-plt.show()   
+plt.title('Model Comparison \n (kfold = ' + str(kfold.n_splits) + ')')
+plt.show() 
 
 # split data into train and test
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=seed)
