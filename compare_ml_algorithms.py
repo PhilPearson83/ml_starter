@@ -127,25 +127,29 @@ xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
 
-figure = plt.figure(figsize=(27, 9))
 i = 1
-cm = plt.cm.get_cmap('RdBu')
-cm_bright = ListedColormap(['#FF0000', '#0000FF'])
+# set some colour variables to use and labels
+cm = plt.cm.get_cmap('RdBu_r')
+cm_bright = ListedColormap(['blue', 'red'])
+labels=['Sat','Unsat']
+# create plot area
+fig = plt.figure(figsize=(27, 9))
 ax = plt.subplot(1, len(models) + 1, i)
+#ax = plt.subplot(1, len(models) + 1, i))
+# set title and min / max values for axis
 ax.set_title("Input data")
-
-# Plot the training points
-ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
-
-# Plot the testing points
-#ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
-
 ax.set_xlim(xx.min(), xx.max())
 ax.set_ylim(yy.min(), yy.max())
 ax.set_xticks(())
 ax.set_yticks(())
-i += 1
+# Plot the training points
+scatter = ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
+#plt.legend(*scatter.legend_elements(),loc="upper right")
+plt.legend(handles=scatter.legend_elements()[0], labels=labels, loc="upper right")
+# Plot the testing points
+#ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
 
+i += 1
 # iterate over classifiers
 for name, clf in models:
     ax = plt.subplot(1, len(models) + 1, i)
@@ -174,5 +178,6 @@ for name, clf in models:
     ax.set_title(name)
     ax.text(xx.max() - .3, yy.min() + .3, ('%.2f' % score).lstrip('0'), size=15, horizontalalignment='right')
     i += 1
+
 plt.tight_layout()
 plt.show()
