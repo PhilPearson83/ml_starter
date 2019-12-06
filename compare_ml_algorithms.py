@@ -58,20 +58,23 @@ models.append(('SGD', SGDClassifier(max_iter=1000, random_state=seed, class_weig
 models.append(('LR', LogisticRegression(class_weight='balanced')))
 models.append(('LRCV', LogisticRegressionCV(class_weight='balanced')))
 models.append(('LDA', LinearDiscriminantAnalysis()))
+models.append(('SVM_lin', SVC(kernel='linear', class_weight='balanced')))
+models.append(('SVM_rbf', SVC(kernel='rbf', class_weight='balanced')))
+#models.append(('SVM_sig', SVC(kernel='sigmoid', class_weight='balanced'))) # Y value the wrong way around??
+models.append(('SVM_poly', SVC(kernel='poly', class_weight='balanced')))
 models.append(('KNN', KNeighborsClassifier()))
-#models.append(('RNC', RadiusNeighborsClassifier(radius = 200)))
+#models.append(('RNC', RadiusNeighborsClassifier(radius=10, weights='uniform')))
 models.append(('CART', DecisionTreeClassifier(class_weight='balanced'))) # max_depth=5
 models.append(('RanFor', RandomForestClassifier(class_weight='balanced'))) # max_depth=5, n_estimators=10, max_features=1
 models.append(('ExTree', ExtraTreesClassifier(class_weight='balanced')))
 models.append(('BC', BaggingClassifier()))
 models.append(('NB', GaussianNB()))
 #models.append(('CB', ComplementNB())) # Can't have negative X values
-models.append(('SVM', SVC(class_weight='balanced')))
 models.append(('Ada', AdaBoostClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 models.append(('QDA', QuadraticDiscriminantAnalysis()))
-#models.append(('Gaussian Process', GaussianProcessClassifier(1.0 * RBF(1.0))))
-models.append(('MLP', MLPClassifier(alpha=1, max_iter=1000)))
+#models.append(('GPC', GaussianProcessClassifier())) #kernel = 1.0 * RBF(1.0)
+#models.append(('MLP', MLPClassifier(alpha=0.0001, max_iter=1000)))
 
 # evaluate each model in the list
 results = []
@@ -157,12 +160,12 @@ for name, clf in models:
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
-    ax.contourf(xx, yy, Z, cmap=cm, alpha=.3)
+    ax.contourf(xx, yy, Z, cmap=cm, alpha=0.3)
 
     # Plot the training points
     #ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
     # Plot the testing points
-    ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
+    #ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
 
     ax.set_xlim(xx.min(), xx.max())
     ax.set_ylim(yy.min(), yy.max())
