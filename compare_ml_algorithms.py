@@ -84,11 +84,11 @@ scoring = 'accuracy'
 print("---------------------------------------")
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=10, random_state=seed)
+    kfold = model_selection.KFold(n_splits=20, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
-    results.append(cv_results)
-    names.append(name)
+    #results.append(cv_results)
+    #names.append(name)
     combined_results.append((name, cv_results.mean(), cv_results))
     msg = "%s: %f (%f) Time elapsed: %f" % (name, cv_results.mean(), cv_results.std(), elapsed_time)
     print(msg)
@@ -96,18 +96,19 @@ print("---------------------------------------")
 
 # sort our results by mean avg score and assign results to variables
 combined_results_sorted = sorted(combined_results, key=itemgetter(1))
-labels = [i[0] for i in combined_results_sorted]
-meanscore = [i[1] for i in combined_results_sorted]
-results = [i[2] for i in combined_results_sorted]
+labels, meanscore, results = zip(*combined_results_sorted)
+#labels, meanscore, results = [i[0] for i in combined_results_sorted], [i[1] for i in combined_results_sorted], [i[2] for i in combined_results_sorted]
 
 
-# boxplot algorithm comparison
-green_diamond = dict(markerfacecolor='b', marker='d')
-fig = plt.figure()
-ax = fig.add_subplot(111)
+# boxplot the algorithm comparison
+orange_circle = dict(markerfacecolor='orange', marker='o')
+fig, ax = plt.subplots(1,1,figsize=(10,8))
+#fig = plt.figure(figsize=(10,8))
+#ax = fig.add_subplot()
 ax.set_xticklabels(labels)
-ax.boxplot(x=results, flierprops=green_diamond) #notch=True bootstrap=1000
+ax.boxplot(x=results, flierprops=orange_circle) #notch=True bootstrap=1000
 plt.ylim((None,1))
+plt.xlabel('Model')
 plt.title('Model Comparison \n (kfold = ' + str(kfold.n_splits) + ')')
 plt.show() 
 
@@ -125,7 +126,7 @@ x_min, x_max = x_train_scaled[:, 0].min() - .5, x_train_scaled[:, 0].max() + .5
 y_min, y_max = x_train_scaled[:, 1].min() - .5, x_train_scaled[:, 1].max() + .5
 xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
 
-
+# set variable to iterate chart subplots
 i = 1
 # set some colour variables to use and labels
 cm = plt.cm.get_cmap('RdBu_r')
@@ -136,11 +137,11 @@ fig = plt.figure(figsize=(27, 9))
 ax = plt.subplot(1, len(models) + 1, i)
 #ax = plt.subplot(1, len(models) + 1, i))
 # set title and min / max values for axis
-ax.set_title("Input data")
 ax.set_xlim(xx.min(), xx.max())
 ax.set_ylim(yy.min(), yy.max())
 ax.set_xticks(())
 ax.set_yticks(())
+ax.set_title("Input data")
 # Plot the training points
 scatter = ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
 #plt.legend(*scatter.legend_elements(),loc="upper right")
