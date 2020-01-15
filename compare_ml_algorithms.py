@@ -35,7 +35,6 @@ y_value = 'Job_Outcome'
 df = pd.read_csv(inputfile)
 df = df.iloc[:, 0:3]
 
-
 # create x y values and standardisation x array
 x = df.drop(y_value, axis=1)
 feature_names = list(x.columns.values)
@@ -77,11 +76,9 @@ models.append(('QDA', QuadraticDiscriminantAnalysis()))
 #models.append(('MLP', MLPClassifier(alpha=0.0001, max_iter=1000)))
 
 # evaluate each model in the list
-#results = []
-#names = []
 combined_results = []
 scoring = 'accuracy'
-print("---------------------------------------")
+print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
     kfold = model_selection.KFold(n_splits=20, random_state=seed)
@@ -92,16 +89,15 @@ for name, model in models:
     combined_results.append((name, cv_results.mean(), cv_results))
     msg = "%s: %f (%f) Time elapsed: %f" % (name, cv_results.mean(), cv_results.std(), elapsed_time)
     print(msg)
-print("---------------------------------------")
+print('---------------------------------------')
 
 # sort our results by mean avg score and assign results to variables
 combined_results_sorted = sorted(combined_results, key=itemgetter(1))
 modelnamme, meanscore, results = zip(*combined_results_sorted)
 #labels, meanscore, results = [i[0] for i in combined_results_sorted], [i[1] for i in combined_results_sorted], [i[2] for i in combined_results_sorted]
 
-
 # boxplot the algorithm comparison
-fig, ax = plt.subplots(1,1,figsize=(10,8))
+fig, ax = plt.subplots(1,1,figsize=(15,8))
 ax.set_xticklabels(modelnamme)
 orange_circle = dict(markerfacecolor='orange', marker='o')
 plt.boxplot(x=results, flierprops=orange_circle) #notch=True bootstrap=1000
