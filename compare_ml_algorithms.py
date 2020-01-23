@@ -27,7 +27,8 @@ warnings.filterwarnings('ignore')
 #warnings.simplefilter(action='ignore', category=UserWarning)
 
 h = .02  # step size in the mesh
-seed = 123 # set random number for consistancy
+seed = 123  # set random number for consistancy
+testsize = 0.20  # split value for test
 
 # load dataset into dataframe
 inputfile = 'W:/2_Reference_Materials/Python/BusSafetyCompliance/Comp.csv'
@@ -59,33 +60,34 @@ models.append(('LRCV', LogisticRegressionCV(class_weight='balanced')))
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('SVM_lin', SVC(kernel='linear', class_weight='balanced')))
 models.append(('SVM_rbf', SVC(kernel='rbf', class_weight='balanced')))
-#models.append(('SVM_sig', SVC(kernel='sigmoid', class_weight='balanced'))) # Y value the wrong way around??
+# models.append(('SVM_sig', SVC(kernel='sigmoid', class_weight='balanced'))) # Y value the wrong way around??
 models.append(('SVM_poly', SVC(kernel='poly', class_weight='balanced')))
 models.append(('KNN', KNeighborsClassifier()))
 #models.append(('RNC', RadiusNeighborsClassifier(radius=10, weights='uniform')))
-models.append(('CART', DecisionTreeClassifier(class_weight='balanced'))) # max_depth=5
-models.append(('RanFor', RandomForestClassifier(class_weight='balanced'))) # max_depth=5, n_estimators=10, max_features=1
+models.append(('CART', DecisionTreeClassifier(class_weight='balanced')))  # max_depth=5
+# max_depth=5, n_estimators=10, max_features=1
+models.append(('RanFor', RandomForestClassifier(class_weight='balanced')))
 models.append(('ExTree', ExtraTreesClassifier(class_weight='balanced')))
 models.append(('BC', BaggingClassifier()))
 models.append(('NB', GaussianNB()))
-#models.append(('CB', ComplementNB())) # Can't have negative X values
+# models.append(('CB', ComplementNB())) # Can't have negative X values
 models.append(('Ada', AdaBoostClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 models.append(('QDA', QuadraticDiscriminantAnalysis()))
-#models.append(('GPC', GaussianProcessClassifier())) #kernel = 1.0 * RBF(1.0)
+# models.append(('GPC', GaussianProcessClassifier())) #kernel = 1.0 * RBF(1.0)
 #models.append(('MLP', MLPClassifier(alpha=0.0001, max_iter=1000)))
 
 # evaluate each model in the list
 combined_results = []
-scoring = 'accuracy'
+scoring = 'roc_auc'
 print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
     kfold = model_selection.KFold(n_splits=20, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
-    #results.append(cv_results)
-    #names.append(name)
+    # results.append(cv_results)
+    # names.append(name)
     combined_results.append((name, cv_results.mean(), cv_results))
     msg = "%s: %f (%f) Time elapsed: %f" % (name, cv_results.mean(), cv_results.std(), elapsed_time)
     print(msg)
@@ -97,22 +99,22 @@ modelnamme, meanscore, results = zip(*combined_results_sorted)
 #labels, meanscore, results = [i[0] for i in combined_results_sorted], [i[1] for i in combined_results_sorted], [i[2] for i in combined_results_sorted]
 
 # boxplot the algorithm comparison
-fig, ax = plt.subplots(1,1,figsize=(15,8))
+fig, ax = plt.subplots(1, 1, figsize=(15, 8))
 ax.set_xticklabels(modelnamme)
 orange_circle = dict(markerfacecolor='orange', marker='o')
-plt.boxplot(x=results, flierprops=orange_circle) #notch=True bootstrap=1000
-plt.ylim((None,1))
+plt.boxplot(x=results, flierprops=orange_circle)  # notch=True bootstrap=1000
+plt.ylim((None, 1))
 plt.xlabel('Model')
 plt.title('Model Comparison \n (kfold = ' + str(kfold.n_splits) + ')')
-plt.show() 
+plt.show()
 
 # split data into train and test
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=seed)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=testsize, random_state=seed)
 
 # standardisation of x arrays
 std_scale = StandardScaler()
-x_train_scaled = std_scale.fit_transform(x_train) 
-x_test_scaled = std_scale.transform(x_test) 
+x_train_scaled = std_scale.fit_transform(x_train)
+x_test_scaled = std_scale.transform(x_test)
 
 #x_min, x_max = x_train_scaled[:, 0].min() - .5, x_train_scaled[:, 0].max() + .5
 #y_min, y_max = x_train_scaled[:, 1].min() - .5, x_train_scaled[:, 1].max() + .5
@@ -125,11 +127,11 @@ i = 1
 # set some colour variables to use and labels
 cm = plt.cm.get_cmap('RdBu_r')
 cm_bright = ListedColormap(['blue', 'red'])
-labels=['Sat','Unsat']
+labels = ['Sat', 'Unsat']
 # create plot area
 fig = plt.figure(figsize=(27, 9))
 ax = plt.subplot(1, len(models) + 1, i)
-#ax = plt.subplot(1, len(models) + 1, i))
+# ax = plt.subplot(1, len(models) + 1, i))
 # set title and min / max values for axis
 ax.set_xlim(xx.min(), xx.max())
 ax.set_ylim(yy.min(), yy.max())
