@@ -83,7 +83,7 @@ scoring = 'roc_auc'
 print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=2 0, random_state=seed)
+    kfold = model_selection.KFold(n_splits=20, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     # results.append(cv_results)
