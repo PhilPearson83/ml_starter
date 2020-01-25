@@ -31,7 +31,7 @@ seed = 123  # set random number for consistancy
 testsize = 0.20  # split value for test
 
 # load dataset into dataframe
-inputfile = 'W:/2_Reference_Materials/Python/BusSafetyCompliance/Comp.csv'
+inputfile = 'W:\\2_Reference_Materials\\Python\\BusSafetyCompliance\\Comp.csv'
 y_value = 'Job_Outcome'
 df = pd.read_csv(inputfile)
 df = df.iloc[:, 0:3]
@@ -83,7 +83,7 @@ scoring = 'roc_auc'
 print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=20, random_state=seed)
+    kfold = model_selection.KFold(n_splits=2 0, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     # results.append(cv_results)
@@ -93,7 +93,7 @@ for name, model in models:
     print(msg)
 print('---------------------------------------')
 
-# sort our results by mean avg score and assign results to variables
+# sort our results by mean avg score and assign results to new variable
 combined_results_sorted = sorted(combined_results, key=itemgetter(1))
 modelnamme, meanscore, results = zip(*combined_results_sorted)
 #labels, meanscore, results = [i[0] for i in combined_results_sorted], [i[1] for i in combined_results_sorted], [i[2] for i in combined_results_sorted]
