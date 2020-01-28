@@ -36,7 +36,7 @@ y_value = 'Job_Outcome'
 df = pd.read_csv(inputfile)
 df = df.iloc[:, 0:3]
 
-# create x y values and standardisation x array
+# create x y values, standardise x and fit to y
 x = df.drop(y_value, axis=1)
 feature_names = list(x.columns.values)
 std_scale = StandardScaler()
@@ -83,7 +83,7 @@ scoring = 'roc_auc'
 print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=20, random_state=seed)
+    kfold = model_selection.KFold(n_splits=10, shuffle=True, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     # results.append(cv_results)
@@ -94,9 +94,10 @@ for name, model in models:
 print('---------------------------------------')
 
 # sort our results by mean avg score and assign results to new variable
-combined_results_sorted = sorted(combined_results, key=itemgetter(1))
+combined_results_sorted = sorted(combined_results, key=itemgetter(1,0))
 modelnamme, meanscore, results = zip(*combined_results_sorted)
 #labels, meanscore, results = [i[0] for i in combined_results_sorted], [i[1] for i in combined_results_sorted], [i[2] for i in combined_results_sorted]
+print(combined_results_sorted)
 
 # boxplot the algorithm comparison
 fig, ax = plt.subplots(1, 1, figsize=(15, 8))
