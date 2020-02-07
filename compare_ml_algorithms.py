@@ -58,10 +58,10 @@ models.append(('SGD', SGDClassifier(max_iter=1000, random_state=seed, class_weig
 models.append(('LR', LogisticRegression(class_weight='balanced')))
 models.append(('LRCV', LogisticRegressionCV(class_weight='balanced')))
 models.append(('LDA', LinearDiscriminantAnalysis()))
-models.append(('SVM_lin', SVC(kernel='linear', class_weight='balanced')))
-models.append(('SVM_rbf', SVC(kernel='rbf', class_weight='balanced')))
+models.append(('SVM_lin', SVC(kernel='linear')))
+models.append(('SVM_rbf', SVC(kernel='rbf')))
 # models.append(('SVM_sig', SVC(kernel='sigmoid', class_weight='balanced'))) # Y value the wrong way around??
-models.append(('SVM_poly', SVC(kernel='poly', class_weight='balanced')))
+models.append(('SVM_poly', SVC(kernel='poly')))
 models.append(('KNN', KNeighborsClassifier()))
 #models.append(('RNC', RadiusNeighborsClassifier(radius=10, weights='uniform')))
 models.append(('CART', DecisionTreeClassifier(class_weight='balanced')))  # max_depth=5
@@ -79,11 +79,11 @@ models.append(('QDA', QuadraticDiscriminantAnalysis()))
 
 # evaluate each model in the list
 combined_results = []
-scoring = 'roc_auc'
+scoring = ['accuracy']
 print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=10, shuffle=True, random_state=seed)
+    kfold = model_selection.KFold(n_splits=2, shuffle=True, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     # results.append(cv_results)
@@ -97,7 +97,6 @@ print('---------------------------------------')
 combined_results_sorted = sorted(combined_results, key=itemgetter(1,0))
 modelnamme, meanscore, results = zip(*combined_results_sorted)
 #labels, meanscore, results = [i[0] for i in combined_results_sorted], [i[1] for i in combined_results_sorted], [i[2] for i in combined_results_sorted]
-print(combined_results_sorted)
 
 # boxplot the algorithm comparison
 fig, ax = plt.subplots(1, 1, figsize=(15, 8))
@@ -126,7 +125,7 @@ xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
 # set variable to iterate chart subplots
 i = 1
 # set some colour variables to use and labels
-cm = plt.cm.get_cmap('RdBu_r')
+cm = plt.cm.get_cmap('RdBu_r') 
 cm_bright = ListedColormap(['blue', 'red'])
 labels = ['Sat', 'Unsat']
 # create plot area
@@ -140,7 +139,7 @@ ax.set_xticks(())
 ax.set_yticks(())
 ax.set_title("Input data")
 # Plot the training points
-scatter = ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
+scatter = ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright)#, edgecolors='k')
 #plt.legend(*scatter.legend_elements(),loc="upper right")
 plt.legend(handles=scatter.legend_elements()[0], labels=labels, loc="upper right")
 # Plot the testing points
@@ -161,7 +160,7 @@ for name, clf in models:
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
-    ax.contourf(xx, yy, Z, cmap=cm, alpha=0.3)
+    ax.contourf(xx, yy, Z, cmap=cm, alpha=0.25)
 
     # Plot the training points
     #ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap=cm_bright, edgecolors='k')
