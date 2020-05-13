@@ -144,7 +144,6 @@ scatter = ax.scatter(x_train_scaled[:, 0], x_train_scaled[:, 1], c=y_train, cmap
 plt.legend(handles=scatter.legend_elements()[0], labels=labels, loc="upper right")
 # Plot the testing points
 #ax.scatter(x_test_scaled[:, 0], x_test_scaled[:, 1], c=y_test, cmap=cm_bright, alpha=0.3, edgecolors='k')
-
 i += 1
 # iterate over classifiers
 for name, clf in models:
