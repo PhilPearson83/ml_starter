@@ -173,6 +173,5 @@ for name, clf in models:
     ax.set_title(name)
     ax.text(xx.max() - .3, yy.min() + .3, ('%.2f' % score).lstrip('0'), size=15, horizontalalignment='right')
     i += 1
-
 plt.tight_layout()
 plt.show()
