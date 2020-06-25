@@ -56,7 +56,7 @@ models = []
 #models.append(('BR', BayesianRidge()))
 models.append(('SGD', SGDClassifier(max_iter=1000, random_state=seed, class_weight='balanced')))
 models.append(('LR', LogisticRegression(class_weight='balanced')))
-models.append(('LRCV', LogisticRegressionCV(class_weight='balanced')))
+#models.append(('LRCV', LogisticRegressionCV(class_weight='balanced'))) #The object works in the same way as GridSearchCV except that it defaults to Generalized Cross-Validation (GCV), an efficient form of leave-one-out cross-validation
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('SVM_lin', SVC(kernel='linear')))
 models.append(('SVM_rbf', SVC(kernel='rbf')))
@@ -64,8 +64,7 @@ models.append(('SVM_rbf', SVC(kernel='rbf')))
 models.append(('SVM_poly', SVC(kernel='poly')))
 models.append(('KNN', KNeighborsClassifier()))
 #models.append(('RNC', RadiusNeighborsClassifier(radius=10, weights='uniform')))
-models.append(('CART', DecisionTreeClassifier(class_weight='balanced')))  # max_depth=5
-# max_depth=5, n_estimators=10, max_features=1
+models.append(('CART', DecisionTreeClassifier(class_weight='balanced')))  # max_depth=5 # max_depth=5, n_estimators=10, max_features=1
 models.append(('RanFor', RandomForestClassifier(class_weight='balanced')))
 models.append(('ExTree', ExtraTreesClassifier(class_weight='balanced')))
 models.append(('BC', BaggingClassifier()))
