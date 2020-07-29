@@ -1,2 +1,2 @@
-# Out of box ML methods
-Useful starter script to visualise different ML methods out of box from the initial dataset.
+# Compare out of box ML methods
+Useful starter script to visualise different ML methods from an initial dataset.
