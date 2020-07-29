@@ -78,11 +78,11 @@ models.append(('QDA', QuadraticDiscriminantAnalysis()))
 
 # evaluate each model in the list
 combined_results = []
-scoring = ['accuracy']
+scoring = 'accuracy'
 print('---------------------------------------')
 for name, model in models:
     start_time = time.time()
-    kfold = model_selection.KFold(n_splits=2, shuffle=True, random_state=seed)
+    kfold = model_selection.KFold(n_splits=5, shuffle=True, random_state=seed)
     cv_results = model_selection.cross_val_score(model, X_std, Y, cv=kfold, scoring=scoring)
     elapsed_time = time.time() - start_time
     # results.append(cv_results)
