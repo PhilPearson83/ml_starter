@@ -11,6 +11,6 @@ Useful starter script to visualise different ML methods from an initial dataset.
 ├── .gitignore
 ├── Licence
 ├── README.md
-├── requirements.txt
-└── compare_ml_algorithms.py
+├── compare_ml_algorithms.py
+└── requirements.txt
 ```
