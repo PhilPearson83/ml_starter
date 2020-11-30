@@ -6,8 +6,9 @@ Useful starter script to visualise different ML methods from an initial dataset.
 ```
 .
 ├── data
-│   ├── 
-│   └── 
+│   ├──
+│   ├──
+│   └──
 ├── .gitignore
 ├── Licence
 ├── README.md
