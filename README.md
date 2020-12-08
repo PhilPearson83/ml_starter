@@ -1,5 +1,5 @@
 # Compare out of box ML methods
-Useful starter script to visualise different ML methods from an initial dataset.
+A useful starting point to to visualise different ML methods from an initial dataset.
 
 # Directory Layout
 
