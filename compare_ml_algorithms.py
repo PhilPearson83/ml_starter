@@ -6,7 +6,7 @@ from matplotlib.colors import ListedColormap
 from operator import itemgetter
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn import model_selection
 from sklearn.linear_model import LinearRegression, LogisticRegressionCV, Ridge, Lasso, BayesianRidge, SGDClassifier, LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
