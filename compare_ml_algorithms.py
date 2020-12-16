@@ -8,7 +8,7 @@ from operator import itemgetter
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn import model_selection
-from sklearn.linear_model import LinearRegression, BayesianRidge, SGDClassifier, LogisticRegression #Ridge, Lasso
+from sklearn.linear_model import SGDClassifier, LogisticRegression #Ridge, Lasso, LinearRegression, BayesianRidge
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
