@@ -17,7 +17,7 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier, BaggingClassifier
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 #from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
+#from sklearn.gaussian_process.kernels import RBF
 from sklearn.neural_network import MLPClassifier
 
 # Disable annoying warnings
