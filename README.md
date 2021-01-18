@@ -24,3 +24,8 @@ _Contents:_ **[Directory Layout](#Directory-Layout)** | **[Installation](#instal
 ├── compare_ml_algorithms.py
 └── requirements.txt
 ```
+
+### Installation
+### 🚀 Quick Start
+### Reference
+### FAQ
