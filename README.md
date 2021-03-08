@@ -10,7 +10,7 @@ _Contents:_ **[Directory Layout](#Directory-Layout)** | **[Installation](#instal
 
 ---
 
-# Directory Layout
+### Directory Layout
 
 ```
 .
